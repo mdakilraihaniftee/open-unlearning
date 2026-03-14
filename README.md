@@ -117,6 +117,8 @@ conda activate unlearning
 pip install ".[lm_eval]"
 pip install --no-build-isolation flash-attn==2.6.3
 
+pip install torchvision==0.19.1+cu121 --index-url https://download.pytorch.org/whl/cu121 --quiet 2>&1 | tail -5
+
 # Data setup
 python setup_data.py --eval # saves/eval now contains evaluation results of the uploaded models
 # This downloads log files with evaluation results (including retain model logs)
