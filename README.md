@@ -112,10 +112,9 @@ We provide several variants for each of the components in the unlearning pipelin
 
 ```bash
 # Environment setup
-conda create -n unlearning python=3.11
-conda activate unlearning
+
 pip install ".[lm_eval]"
-pip install --no-build-isolation flash-attn==2.6.3
+pip install flash-attn==2.6.3 --no-cache-dir --no-build-isolation 
 
 pip install torchvision==0.19.1+cu121 --index-url https://download.pytorch.org/whl/cu121 --quiet 2>&1 | tail -5
 
