@@ -123,11 +123,13 @@ pip install flash-attn==2.6.3 --no-cache-dir --no-build-isolation
 
 python setup_data.py --eval
 
-huggingface-cli login
 # saves/eval now contains evaluation results of the uploaded models
 
+#login hugging face
+huggingface-cli login
 
-
+#run
+python src/train.py --config-name=train.yaml experiment=finetune/tofu/default task_name=SAMPLE_TRAIN 2>&1
 
 # This downloads log files with evaluation results (including retain model logs)
 # into `saves/eval`, used for evaluating unlearning across supported benchmarks.
