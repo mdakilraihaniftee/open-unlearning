@@ -122,6 +122,8 @@ pip install torchvision==0.19.1+cu121 --index-url https://download.pytorch.org/w
 pip install flash-attn==2.6.3 --no-cache-dir --no-build-isolation 
 
 python setup_data.py --eval
+
+huggingface-cli login
 # saves/eval now contains evaluation results of the uploaded models
 
 
