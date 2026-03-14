@@ -112,14 +112,21 @@ We provide several variants for each of the components in the unlearning pipelin
 
 ```bash
 # Environment setup
+git clone https://github.com/mdakilraihaniftee/open-unlearning.git
 
+cd open-unlearning                                                
 pip install ".[lm_eval]"
-pip install flash-attn==2.6.3 --no-cache-dir --no-build-isolation 
 
 pip install torchvision==0.19.1+cu121 --index-url https://download.pytorch.org/whl/cu121 --quiet 2>&1 | tail -5
 
-# Data setup
-python setup_data.py --eval # saves/eval now contains evaluation results of the uploaded models
+pip install flash-attn==2.6.3 --no-cache-dir --no-build-isolation 
+
+python setup_data.py --eval
+# saves/eval now contains evaluation results of the uploaded models
+
+
+
+
 # This downloads log files with evaluation results (including retain model logs)
 # into `saves/eval`, used for evaluating unlearning across supported benchmarks.
 # Additional datasets (e.g., WMDP) are supported — run below for options:
