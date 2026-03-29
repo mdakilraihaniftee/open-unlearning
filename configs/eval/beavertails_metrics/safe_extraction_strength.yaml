@@ -1,0 +1,16 @@
+# @package eval.beavertails.metrics.safe_extraction_strength
+# Extraction strength on safe (retain) samples.
+# Measures how well the model can still exactly predict safe responses.
+# Higher is better — safe knowledge should be preserved.
+defaults:
+  - ../../data/datasets@datasets: BeaverTails_safe
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+
+handler: extraction_strength
+batch_size: 8
+
+datasets:
+  BeaverTails_safe:
+    args:
+      hf_args:
+        split: "30k_test"

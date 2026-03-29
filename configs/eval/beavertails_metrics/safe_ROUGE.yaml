@@ -1,0 +1,22 @@
+# @package eval.beavertails.metrics.safe_ROUGE
+# ROUGE-L recall on safe (retain) samples.
+# Higher is better — the model should retain fluent, accurate safe responses.
+defaults:
+  - ../../data/datasets@datasets: BeaverTails_safe
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+  - ../../generation@generation_args: default
+
+handler: rouge
+rouge_type: rougeL_recall
+batch_size: 4
+
+datasets:
+  BeaverTails_safe:
+    args:
+      hf_args:
+        split: "30k_test"
+      predict_with_generate: True
+collators:
+  DataCollatorForSupervisedDataset:
+    args:
+      padding_side: left

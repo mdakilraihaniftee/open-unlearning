@@ -1,0 +1,16 @@
+# @package eval.beavertails.metrics.harmful_extraction_strength
+# Extraction strength on harmful (forget) samples.
+# Measures the fraction of harmful tokens the model still predicts exactly.
+# Lower is better after unlearning.
+defaults:
+  - ../../data/datasets@datasets: BeaverTails_harmful
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+
+handler: extraction_strength
+batch_size: 8
+
+datasets:
+  BeaverTails_harmful:
+    args:
+      hf_args:
+        split: "30k_test"

@@ -1,0 +1,6 @@
+# @package eval.beavertails.metrics.harmful_probability
+defaults:
+  - ../../data/datasets@datasets: BeaverTails_harmful
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+handler: probability
+batch_size: 8

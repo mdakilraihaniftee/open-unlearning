@@ -1,0 +1,10 @@
+BeaverTails_safe:
+  handler: BeaverTailsDataset
+  args:
+    hf_args:
+      path: "PKU-Alignment/BeaverTails"
+      split: "30k_test"
+    is_safe_filter: true
+    question_key: "prompt"
+    answer_key: "response"
+    max_length: 512

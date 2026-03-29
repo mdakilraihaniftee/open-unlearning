@@ -25,6 +25,9 @@ def main(cfg: DictConfig):
     data = get_data(
         data_cfg, mode=mode, tokenizer=tokenizer, template_args=template_args
     )
+    # print(type(data["train"]))
+    # print(len(data["train"]))        # if __len__ is implemented
+    # print(data["train"][0])          # first sample
 
     # Load collator
     collator_cfg = cfg.collator

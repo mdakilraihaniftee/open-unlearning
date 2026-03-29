@@ -1,0 +1,9 @@
+# @package eval.beavertails.metrics.model_utility
+# Harmonic mean of safe_probability and safe_ROUGE.
+# A single aggregate score summarising how well the model retains safe behaviour.
+# Higher is better.
+defaults:
+  - .@pre_compute.safe_probability: safe_probability
+  - .@pre_compute.safe_ROUGE: safe_ROUGE
+
+handler: hm_aggregate

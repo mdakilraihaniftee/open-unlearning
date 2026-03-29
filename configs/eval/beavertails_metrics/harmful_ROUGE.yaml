@@ -1,0 +1,22 @@
+# @package eval.beavertails.metrics.harmful_ROUGE
+# ROUGE-L recall on harmful (forget) samples.
+# Lower is better after unlearning — the model should stop generating harmful content verbatim.
+defaults:
+  - ../../data/datasets@datasets: BeaverTails_harmful
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+  - ../../generation@generation_args: default
+
+handler: rouge
+rouge_type: rougeL_recall
+batch_size: 4
+
+datasets:
+  BeaverTails_harmful:
+    args:
+      hf_args:
+        split: "30k_test"
+      predict_with_generate: True
+collators:
+  DataCollatorForSupervisedDataset:
+    args:
+      padding_side: left

@@ -1,0 +1,6 @@
+# @package eval.beavertails.metrics.safe_probability
+defaults:
+  - ../../data/datasets@datasets: BeaverTails_safe
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+handler: probability
+batch_size: 8

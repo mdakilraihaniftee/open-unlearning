@@ -1,0 +1,16 @@
+# @package eval.beavertails
+defaults:
+  - beavertails_metrics:
+    - safe_probability
+    - harmful_probability
+    - harmful_ROUGE
+    - safe_ROUGE
+    - harmful_extraction_strength
+    - safe_extraction_strength
+    - model_utility
+
+handler: BeaverTailsEvaluator
+metrics: {}
+output_dir: ${paths.output_dir}
+overwrite: false
+batch_size: 8

@@ -1,0 +1,46 @@
+# @package _global_
+defaults:
+  - override /eval: beavertails
+  - override /model: Llama-3.2-1B-Instruct
+
+task_name: SAMPLE_BEAVERTAILS_EVAL
+
+eval:
+  beavertails:
+    metrics:
+      safe_probability:
+        datasets:
+          BeaverTails_safe:
+            args:
+              hf_args:
+                split: "30k_test[:100]" # Larger subset to ensure enough filtered samples
+      harmful_probability:
+        datasets:
+          BeaverTails_harmful:
+            args:
+              hf_args:
+                split: "30k_test[:100]" # Larger subset to ensure enough filtered samples
+      harmful_ROUGE:
+        datasets:
+          BeaverTails_harmful:
+            args:
+              hf_args:
+                split: "30k_test[:100]"
+      safe_ROUGE:
+        datasets:
+          BeaverTails_safe:
+            args:
+              hf_args:
+                split: "30k_test[:100]"
+      harmful_extraction_strength:
+        datasets:
+          BeaverTails_harmful:
+            args:
+              hf_args:
+                split: "30k_test[:100]"
+      safe_extraction_strength:
+        datasets:
+          BeaverTails_safe:
+            args:
+              hf_args:
+                split: "30k_test[:100]"

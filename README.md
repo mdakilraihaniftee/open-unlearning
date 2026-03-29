@@ -80,10 +80,10 @@ We provide several variants for each of the components in the unlearning pipelin
 
 | **Component**          | **Available Options** |
 |------------------------|----------------------|
-| **Benchmarks**        | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/), [WMDP](https://www.wmdp.ai/) |
+| **Benchmarks**        | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/), [WMDP](https://www.wmdp.ai/), [BeaverTails](https://arxiv.org/abs/2307.04657) |
 | **Unlearning Methods** | GradAscent, GradDiff, NPO, SimNPO, DPO, RMU, UNDIAL, AltPO, SatImp, WGA, CE-U, PDU |
 | **Evaluation Metrics** | Verbatim Probability, Verbatim ROUGE, Knowledge QA-ROUGE, Model Utility, Forget Quality, TruthRatio, Extraction Strength, Exact Memorization, 6 MIA attacks, [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness) |
-| **Datasets**          | MUSE-News (BBC), MUSE-Books (Harry Potter), TOFU (different splits), WMDP-Bio, WMDP-Cyber |
+| **Datasets**          | MUSE-News (BBC), MUSE-Books (Harry Potter), TOFU (different splits), WMDP-Bio, WMDP-Cyber, BeaverTails-harmful, BeaverTails-safe |
 | **Model Families**    | TOFU: Llama-3.2, Llama-3.1, Llama-2; MUSE: Llama-2; Additional: Phi-3.5, Phi-1.5, Gemma, Zephyr |
 
 ---
@@ -164,6 +164,16 @@ python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/default \
 - `forget_split/retain_split`- Sets the forget and retain dataset splits.
 - `trainer`- Load [`configs/trainer/GradAscent.yaml`](configs/trainer/GradAscent.yaml) and override the unlearning method with the handler (see config) implemented in [`src/trainer/unlearn/grad_ascent.py`](src/trainer/unlearn/grad_ascent.py).
 
+For **BeaverTails** (safety unlearning — harmful content is forgotten, safe responses are retained):
+
+```bash
+python src/train.py --config-name=unlearn.yaml experiment=unlearn/beavertails/default \
+  trainer=GradAscent task_name=BEAVERTAILS_UNLEARN
+```
+
+- `experiment`- Points to [`configs/experiment/unlearn/beavertails/default.yaml`](configs/experiment/unlearn/beavertails/default.yaml); uses `BeaverTails_harmful` as the forget set and `BeaverTails_safe` as the retain set.
+- After training, **7 detailed metrics** are automatically computed: `harmful_probability`, `harmful_ROUGE`, `harmful_extraction_strength` (↓ lower is better), `safe_probability`, `safe_ROUGE`, `safe_extraction_strength`, and `model_utility` (↑ higher is better).
+
 ### 📊 Perform an Evaluation
 
 An example command for launching a TOFU evaluation process on `forget10` split:
@@ -182,18 +192,42 @@ python src/eval.py --config-name=eval.yaml experiment=eval/tofu/default \
 - `model.model_args.pretrained_model_name_or_path`- Overrides the default experiment config to evaluate a model from a HuggingFace ID (can use a local model checkpoint path as well).
 - `retain_logs_path`- Sets the path to the reference model eval logs that is needed to compute reference model based metrics like `forget_quality` in TOFU.
 
+For **BeaverTails**, run evaluation on the full test set:
+
+```bash
+python src/eval.py --config-name=eval.yaml experiment=eval/beavertails/default \
+  task_name=BEAVERTAILS_EVAL_FULL
+```
+
+Or use the sample experiment for a fast check on 100 examples per metric:
+
+```bash
+python src/eval.py --config-name=eval.yaml experiment=eval/beavertails/sample \
+  task_name=SAMPLE_BEAVERTAILS_EVAL
+```
+
+- `experiment`- Points to [`configs/experiment/eval/beavertails/default.yaml`](configs/experiment/eval/beavertails/default.yaml) (or `sample.yaml`).
+- Results are saved to `saves/<task_name>/BEAVERTAILS_EVAL.json` (per-sample) and `BEAVERTAILS_SUMMARY.json` (aggregated).
+
 For more details about creating and running evaluations, refer [`docs/evaluation.md`](docs/evaluation.md).
 
 
 ### 📜 Running Baseline Experiments
-The scripts below execute standard baseline unlearning experiments on the TOFU and MUSE datasets, evaluated using their corresponding benchmarks. The expected results for these are in [`docs/repro.md`](docs/repro.md).
+The scripts below execute standard baseline unlearning experiments on the TOFU, MUSE, and BeaverTails datasets, evaluated using their corresponding benchmarks. The expected results for these are in [`docs/repro.md`](docs/repro.md).
 
 ```bash
 bash scripts/tofu_unlearn.sh
 bash scripts/muse_unlearn.sh
 ```
 
-The above scripts are not tuned and uses default hyper parameter settings. We encourage you to tune your methods and add your final results in [`community/leaderboard.md`](community/leaderboard.md).
+For BeaverTails, run unlearning directly with:
+
+```bash
+python src/train.py --config-name=unlearn.yaml experiment=unlearn/beavertails/default \
+  trainer=GradAscent task_name=BEAVERTAILS_UNLEARN
+```
+
+The above scripts are not tuned and use default hyper-parameter settings. We encourage you to tune your methods and add your final results in [`community/leaderboard.md`](community/leaderboard.md).
 
 ---
 
