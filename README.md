@@ -123,9 +123,7 @@ pip install flash-attn==2.6.3 --no-cache-dir --no-build-isolation
 
 python setup_data.py --eval
 
-# saves/eval now contains evaluation results of the uploaded models
-
-#login hugging face
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 huggingface-cli login
 
 #run
