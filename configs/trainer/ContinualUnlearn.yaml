@@ -1,0 +1,8 @@
+defaults:
+  - finetune
+
+handler: ContinualUnlearnTrainer
+
+method_args:
+  judge_model_name: "google/gemma-2-2b-it"
+  max_new_tokens: 200

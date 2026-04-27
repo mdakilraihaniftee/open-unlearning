@@ -1,0 +1,35 @@
+# @package _global_
+defaults:
+  - override /model: Llama-3.2-1B-Instruct
+  - override /trainer: ContinualGradDiff
+
+  - override /data: unlearn
+  - override /data/datasets@data.forget: BeaverTails_harmful
+  - override /data/datasets@data.retain: BeaverTails_safe
+  - override /eval: beavertails
+
+# Override dataset args for training
+data:
+  forget:
+    BeaverTails_harmful:
+      args:
+        hf_args:
+          split: "30k_train"
+  retain:
+    BeaverTails_safe:
+      args:
+        hf_args:
+          split: "30k_train"
+
+eval:
+  beavertails:
+    overwrite: true
+
+trainer:
+  args:
+    per_device_train_batch_size: 1
+    gradient_accumulation_steps: 1
+    learning_rate: 1e-5
+    num_train_epochs: 1
+
+task_name: CONTINUAL_GRADDIFF

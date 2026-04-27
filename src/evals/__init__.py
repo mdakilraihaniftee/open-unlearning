@@ -25,7 +25,11 @@ def get_evaluator(name: str, eval_cfg: DictConfig, **kwargs):
 
 def get_evaluators(eval_cfgs: DictConfig, **kwargs):
     evaluators = {}
+    if eval_cfgs is None:
+        return evaluators
     for eval_name, eval_cfg in eval_cfgs.items():
+        if eval_cfg is None or eval_cfg.get("handler") is None:
+            continue
         evaluators[eval_name] = get_evaluator(eval_name, eval_cfg, **kwargs)
     return evaluators
 

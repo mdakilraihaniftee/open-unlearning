@@ -36,6 +36,19 @@ if is_deepspeed_available():
 
 
 class UnlearnTrainer(FinetuneTrainer):
+    def _prepare_inputs(self, inputs: Any) -> Any:
+        """
+        Prepare inputs for the model, handling nested dictionaries for unlearning (forget/retain).
+        """
+        if isinstance(inputs, dict):
+            # Recursively move items to device
+            return {k: self._prepare_inputs(v) for k, v in inputs.items()}
+        elif isinstance(inputs, (list, tuple)):
+            return type(inputs)(self._prepare_inputs(v) for v in inputs)
+        elif isinstance(inputs, torch.Tensor):
+            return inputs.to(self.accelerator.device)
+        return inputs
+
     # Adapted from Huggingface DPO Trainer: https://github.com/huggingface/accelerate/blob/739b135f8367becb67ffaada12fe76e3aa60fefd/src/accelerate/accelerator.py#L1473
     def _prepare_deepspeed(self, model):
         # Adapted from accelerate: https://github.com/huggingface/accelerate/blob/739b135f8367becb67ffaada12fe76e3aa60fefd/src/accelerate/accelerator.py#L1473

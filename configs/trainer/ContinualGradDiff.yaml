@@ -1,0 +1,11 @@
+defaults:
+  - GradDiff
+
+handler: ContinualGradDiff
+
+method_args:
+  judge_model_name: "google/gemma-2-2b-it"
+  max_new_tokens: 200
+  gamma: 1.0
+  alpha: 1.0
+  retain_loss_type: "NLL"
