@@ -1,5 +1,3 @@
-# Modified from https://github.com/huggingface/transformers/blob/v4.45.1/src/transformers/trainer.py
-
 import logging
 import os
 from typing import Any, Dict, List, Optional, Union
@@ -7,6 +5,8 @@ from typing import Any, Dict, List, Optional, Union
 from torch.utils.data import Dataset
 from transformers import Trainer
 from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
+
+from trainer.qualitative_callback import QualitativeGenerationCallback
 
 logger = logging.getLogger(__name__)
 
@@ -16,12 +16,35 @@ _EVAL_PLACEHOLDER = "_EVAL_PLACEHOLDER"
 
 
 class FinetuneTrainer(Trainer):
-    def __init__(self, evaluators=None, template_args=None, *args, **kwargs):
+    def __init__(
+        self,
+        evaluators=None,
+        template_args=None,
+        qualitative_num_samples: int = 3,
+        *args,
+        **kwargs,
+    ):
         self.evaluators = evaluators
         self.template_args = template_args
         if kwargs.get("eval_dataset") is None and evaluators:
             kwargs["eval_dataset"] = _EVAL_PLACEHOLDER
         super().__init__(*args, **kwargs)
+
+        # Add qualitative generation callback after parent __init__ so
+        # self.train_dataset and self.processing_class are already set
+        if qualitative_num_samples and qualitative_num_samples > 0:
+            if self.train_dataset is not None and self.processing_class is not None:
+                qual_cb = QualitativeGenerationCallback(
+                    train_dataset=self.train_dataset,
+                    tokenizer=self.processing_class,
+                    template_args=template_args,
+                    num_samples=qualitative_num_samples,
+                )
+                self.add_callback(qual_cb)
+                logger.info(
+                    f"QualitativeGenerationCallback registered "
+                    f"(num_samples={qualitative_num_samples})"
+                )
 
     def evaluate(
         self,

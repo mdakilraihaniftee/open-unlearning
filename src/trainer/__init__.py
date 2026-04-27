@@ -1,6 +1,6 @@
 import torch
 from typing import Dict, Any
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 from transformers import Trainer, TrainingArguments
 
 from trainer.base import FinetuneTrainer
@@ -29,7 +29,7 @@ def _register_trainer(trainer_class):
 
 
 def load_trainer_args(trainer_args: DictConfig, dataset):
-    trainer_args = dict(trainer_args)
+    trainer_args = OmegaConf.to_container(trainer_args, resolve=True)
     warmup_epochs = trainer_args.pop("warmup_epochs", None)
     if warmup_epochs:
         batch_size = trainer_args["per_device_train_batch_size"]
@@ -57,6 +57,7 @@ def load_trainer(
 ):
     trainer_args = trainer_cfg.args
     method_args = trainer_cfg.get("method_args", {})
+    qualitative_num_samples = trainer_cfg.get("qualitative_num_samples", 3)
     trainer_args = load_trainer_args(trainer_args, train_dataset)
     trainer_handler_name = trainer_cfg.get("handler")
     assert trainer_handler_name is not None, ValueError(
@@ -75,6 +76,7 @@ def load_trainer(
         args=trainer_args,
         evaluators=evaluators,
         template_args=template_args,
+        qualitative_num_samples=qualitative_num_samples,
         **method_args,
     )
     logger.info(

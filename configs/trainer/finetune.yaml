@@ -1,4 +1,5 @@
 handler: FinetuneTrainer
+qualitative_num_samples: 3
 args:
   per_device_train_batch_size: 8
   per_device_eval_batch_size: 16
@@ -9,11 +10,12 @@ args:
   logging_steps: 5
   output_dir: ${paths.output_dir}
   logging_dir: ${trainer.args.output_dir}/logs
-  report_to: tensorboard
+  report_to: [tensorboard, wandb]
   ddp_find_unused_parameters: None
   gradient_checkpointing: False
   optim: paged_adamw_32bit
   save_strategy: 'no'
+  save_steps: 1
   save_only_model: True
   weight_decay: 0.00
   do_train: True
@@ -21,4 +23,5 @@ args:
   eval_on_start: True
   eval_strategy: epoch
   num_train_epochs: 10
+  max_steps: -1
   seed: 0

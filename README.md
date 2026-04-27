@@ -166,7 +166,8 @@ For **BeaverTails** (safety unlearning — harmful content is forgotten, safe re
 
 ```bash
 python src/train.py --config-name=unlearn.yaml experiment=unlearn/beavertails/default \
-  trainer=GradAscent task_name=BEAVERTAILS_UNLEARN
+  trainer=GradDiff task_name=BEAVERTAILS_UNLEARN
+
 ```
 
 - `experiment`- Points to [`configs/experiment/unlearn/beavertails/default.yaml`](configs/experiment/unlearn/beavertails/default.yaml); uses `BeaverTails_harmful` as the forget set and `BeaverTails_safe` as the retain set.
@@ -222,7 +223,8 @@ For BeaverTails, run unlearning directly with:
 
 ```bash
 python src/train.py --config-name=unlearn.yaml experiment=unlearn/beavertails/default \
-  trainer=GradAscent task_name=BEAVERTAILS_UNLEARN
+  trainer=GradDiff task_name=BEAVERTAILS_UNLEARN
+
 ```
 
 The above scripts are not tuned and use default hyper-parameter settings. We encourage you to tune your methods and add your final results in [`community/leaderboard.md`](community/leaderboard.md).
