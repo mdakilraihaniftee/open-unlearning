@@ -236,6 +236,26 @@ The above scripts are not tuned and use default hyper-parameter settings. We enc
 If you are interested in contributing to our work, please have a look at [`contributing.md`](docs/contributing.md) guide.
 
 
+Continual setup:
+
+```bash 
+
+python src/train.py \
+    experiment=unlearn/beavertails/continual_graddiff \
+    mode=unlearn \
+    trainer.args.max_steps=-1 \
+    trainer.args.eval_on_start=false \
+    trainer.args.do_eval=false \
+    trainer.args.eval_strategy=no \
+    +trainer.args.remove_unused_columns=false \
+    '~eval'
+```
+
+
+
+
+
+
 ## 📚 Further Documentation
 
 For more in-depth information on specific aspects of the framework, refer to the following documents:
